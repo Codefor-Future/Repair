@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Sign Up</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script>
+</head>
+<body>
+    <div id="app" class="text-center p-4">
+        <h2>Sign Up</h2>
+        <input type="text" placeholder="Name" v-model="name" class="border-left-0 border-bottom-1 border-top-0 border-right-0 m-2" v-bind:class="{'text-danger':error}"><br>
+        <input class="border-left-0 border-bottom-1 border-top-0 border-right-0 m-2" type="text" placeholder="Mobile" id="mobile" v-model="mobile" v-bind:class="{'text-danger':error}"><br>
+        <input class="border-left-0 border-bottom-1 border-top-0 border-right-0 m-2" type="texts" placeholder="Password" v-model="password" v-bind:class="{'text-danger':error}"><br>
+        <input class="border-left-0 border-bottom-1 border-top-0 border-right-0 m-2" type="texts" placeholder="email" v-model="email" v-bind:class="{'text-danger':error}"><br>
+        <button @click="signup" class="btn-success rounded p-2 border-0 mt-2">Sign Up</button>
+        <button  class="btn-light rounded p-2 border-0 mt-2"><a href="/signin"> Sign In</a></button>
+        <p v-show="error" class="text-danger mt-2" style="font-size: 10px;">Error!<br>Try with another number</p>
+    </div>
+    <script>
+        var app= new Vue({
+            el:"#app",
+            data:{
+                error:false,
+                name:"",
+                mobile:"",
+                password:"",
+                email:"",
+                ExistingUser:false
+            },
+            methods:{
+                signup(){
+                    if(this.mobile.length===10){
+                        axios.post("/signup",{
+                        name:this.name,
+                        password:this.password,
+                        mobile:this.mobile,
+                        email:this.email
+                        })
+                        .catch((err)=>{
+                            this.error=true
+                            setTimeout(()=>{
+                                this.error=false
+                            },2000)
+                        }).then((res)=>{
+                            if(res){
+                                
+                                window.location.href="/signin"
+                            }
+                        })
+                        
+                    
+                    }else{
+                    this.error=true;
+                    setTimeout(()=>{
+                                this.error=false
+                            },2000)
+                    }
+                }
+            }
+        })
+    
+    </script>
+</body>
+</html>

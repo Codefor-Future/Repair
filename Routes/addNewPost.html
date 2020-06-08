@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>New Post</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script>
+</head>
+<body>
+    <style>
+        ::placeholder{
+            font-size: 13px;
+            color: rgb(6, 156, 156);
+        }
+        #dropdownMenuButton{
+            font-size: 13px;
+            color: rgba(6, 156, 156, 0.658);
+        }
+        h2{
+            color: rgba(5, 31, 78, 0.493);
+        }
+        input,textarea{
+            color: rgba(0, 0, 0, 0.534);
+            font-size: 15px;
+        }
+    
+    </style>
+    <div id="app" class="text-center">
+        <!-- nav -->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <h1 class="navbar-brand">REPAIR</h1>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+          
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+              <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                  <a class="nav-link" href="/home">Home <span class="sr-only">(current)</span></a>
+                </li>
+                
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Contact Admin
+                  </a>
+                  <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <p class="dropdown-item ml-3">
+                        <h5>Contact Admin</h5>
+                        <h6>98989989899</h6>
+                        <p>Akhil</p>
+                    </p>
+                    
+                  </div>
+                </li>
+                
+              </ul>
+              
+            </div>
+          </nav>
+
+        <!-- /nav -->
+
+
+
+        <h2 class="text-center mt-3">Post New Item</h2><br>
+        <div class="text-left mx-auto mt-0" style="width: 300px;">
+            
+            <input type="text" id="name" v-model="name" class="w-50 border-left-0 border-bottom-1 border-top-0 border-right-0 m-2" placeholder="Name of the product">
+
+            <div class="dropdown d-inline">
+                <button class="btn border-bottom-1 btn-white dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Category
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                  <p class="dropdown-item" @click="type='Electronics'">Electronics</p>
+                  <p class="dropdown-item" @click="type='Electricals'">Electricals</p>
+                  <p class="dropdown-item" @click="type='Others'">Others</p>
+                </div>
+            </div>
+            
+            <textarea name="desc" id="desc" cols="30" rows="1" v-model="description" class="border-left-0 border-bottom-1 border-top-0 border-right-0 m-2" placeholder="Description"></textarea><br>
+            
+            <input type="text" id="model" v-model="model" class="border-left-0 border-bottom-1 border-top-0 border-right-0 m-2" placeholder="Model"><br>
+            <textarea name="loc" id="loc" cols="30" rows="1" v-model="location" class="border-left-0 border-bottom-1 border-top-0 border-right-0 m-2"  placeholder="Location"></textarea><br>
+            <p v-show="error" class="text-danger" style="font-size: 12px;">Give necessary details</p>
+            <button @click="post" class="ml-2 mt-2 border-0 rounded btn-success p-2">Post Item</button>
+        </div>
+    </div>
+
+
+    <script>
+        const app= new Vue({
+            el:"#app",
+            data:{
+                name:"",
+                type:"",
+                description:"",
+                model:"",
+                location:"",
+                error:false
+            },
+            methods:{
+                post(){
+                    if(this.name&&this.type&&this.description&&this.model&&this.location){
+                        axios.post("/addNewPost",{
+                            name:this.name,
+                            type:this.type,
+                            description:this.description,
+                            model:this.model,
+                            location:this.location
+                        }).then((res)=>{
+                            console.log(res)
+                            window.location.href="/home"
+                        }).catch((err)=>{
+                            window.location.href="/signup"
+                        })
+                        window.location.href="/home"
+                    }else{
+                        this.error=true;
+                        setTimeout(()=>{
+                                this.error=false
+                            },3000)
+                    }
+                }
+                
+            }
+        })
+    
+    </script>
+</body>
+</html>

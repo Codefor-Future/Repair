@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.min.js"></script>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script> -->
+    <title>Home</title>
+</head>
+<body>
+    <style>
+        .history{
+            border-left: 5px rgb(192, 190, 190) solid;
+        }
+        .progress{
+            width:80%;
+            height: 8px;
+            background-color: blue;
+        }
+        .progressBar{
+
+        }
+    </style>
+    
+   
+    <div id="app">
+        <!-- nav -->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <h1 class="navbar-brand">REPAIR</h1>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+          
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+              <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                  <a class="nav-link" href="/home">Home <span class="sr-only">(current)</span></a>
+                </li>
+                
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Contact Admin
+                  </a>
+                  <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <p class="dropdown-item ml-3">
+                        <h5>Contact Admin</h5>
+                        <h6>98989989899</h6>
+                        <p>Akhil</p>
+                    </p>
+                    
+                  </div>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      {{user.name}}
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        
+                        <a class="dropdown-item" href="/addNewPost">Post new Item</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" @click="signout">Sign Out</a>
+                      </div>
+                  </li>
+              </ul>
+              <form class="form-inline my-2 my-lg-0">
+                <button class="btn btn-outline-light text-white my-2 my-sm-0"><a href="/addNewPost">Post New Item</a></button>
+              </form>
+            </div>
+          </nav>
+
+        <!-- /nav -->
+        
+        
+    
+        <div class="row">
+            <!-- show selected post details -->
+            <div class="selectedPost col-md-8 col-lg-7 col-sm-12" v-if="posts">
+                <div>{{selectedItem.type}}</div>
+                <h1>{{selectedItem.name}}</h1>
+                <h6>{{selectedItem.Model}}</h6>
+                <p>{{selectedItem.description}}</p>
+
+                <div class="progress">
+                    <div class="progressBar">
+
+                    </div>
+                </div>
+            </div>
+            <!-- /show selected post details -->
+            <!-- user history -->
+        
+            <div class="history col-lg-4 col-md-4 col-sm-12 pt-2">
+                
+                <ul>
+                    <div class="border-bottom ml-0" v-if="posts" v-for="post in posts" @click="selectedItem=post">
+                        <div class="border-1 p-1">
+                          <h5 class="m-0 p-0" style="font-size: 17px; font-weight: bold; color: rgba(12, 56, 122, 0.658);">{{post.name}}</h5>
+                          <p class="" style="font-size: 13px; color: rgba(0, 0, 0, 0.384);">{{post.description}}</p>
+                          <p v-if="post.pickedUp" class="text-success m-0 p-0" style="font-size: 12px;">Picked Up</p>
+                          <p v-if="post.delivered" class="text-success" style="font-size: 12px;">Deliverd</p>
+                        </div>
+                    </div>
+
+
+                    <!-- <li v-if="posts" v-for="post in posts" @click="selectedItem=post" >
+                        <h1>{{post.name}}</h1>
+                        <h4>{{post.model}}</h4>
+                        <h5 v-show="post.pickedUp">Picked Up</h5>
+                        <h5 v-show="post.delivered">Delivered</h5>
+                    </li> -->
+                </ul>
+
+            </div>
+            <!-- /history -->
+        </div>
+    </div>
+        <script>
+            const app= new Vue({
+                
+                el:"#app",
+                data:{
+                    selectedItem:0,
+                    user:{
+                        id:null,
+                        name:"Not Registerd"
+                    },
+                    posts:[]
+
+                },
+                methods:{
+                    signout(){
+                        document.cookie="token"+'=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+                        window.location.href="/signup"
+                    }
+                },
+                created(){
+                    axios.get("/data",{withCredentials:true})
+                    .then((res)=>{
+                        this.user.id= res.data._id;
+                        this.user.name= res.data.name;
+                        this.posts=res.data.posts
+                    }).catch((err)=>{
+                        window.location.href="/signup"
+                    })
+                }
+            })
+        </script>
+</body>
+</html>
