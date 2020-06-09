@@ -104,6 +104,7 @@
                 description:"",
                 model:"",
                 location:"",
+                adminMsg:"We will reach you soon :)",
                 error:false
             },
             methods:{
@@ -114,7 +115,8 @@
                             type:this.type,
                             description:this.description,
                             model:this.model,
-                            location:this.location
+                            location:this.location,
+                            adminMsg:this.adminMsg
                         }).then((res)=>{
                             console.log(res)
                             window.location.href="/home"

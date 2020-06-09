@@ -1,6 +1,6 @@
 const mongoose= require("mongoose");
 
-const URL= "mongodb+srv://Abhinav:11902015@repairproducts-rtxbh.mongodb.net/repair?retryWrites=true&w=majority"
+const URL_= process.env.MONGO_URL
 
 const InitialiseMongo= async()=>{
     try{

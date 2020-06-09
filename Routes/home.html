@@ -16,15 +16,25 @@
 <body>
     <style>
         .history{
-            border-left: 5px rgb(192, 190, 190) solid;
+            border-left: 1px rgb(192, 190, 190) solid;
         }
-        .progress{
-            width:80%;
-            height: 8px;
-            background-color: blue;
+        #description::before{
+            content: 'Problem';
+            font-size: 12px;
+            color: rgba(0, 0, 110, 0.877);
+            display: block;
         }
-        .progressBar{
-
+        #location::before{
+            content: 'Address';
+            font-size: 12px;
+            color: rgba(0, 0, 110, 0.877);
+            display: block;
+        }
+        #adminMsg::before{
+            content: 'Message from Admin';
+            font-size: 12px;
+            color: rgba(0, 0, 110, 0.877);
+            display: block;
         }
     </style>
     
@@ -80,41 +90,52 @@
     
         <div class="row">
             <!-- show selected post details -->
-            <div class="selectedPost col-md-8 col-lg-7 col-sm-12" v-if="posts">
-                <div>{{selectedItem.type}}</div>
-                <h1>{{selectedItem.name}}</h1>
-                <h6>{{selectedItem.Model}}</h6>
-                <p>{{selectedItem.description}}</p>
-
-                <div class="progress">
-                    <div class="progressBar">
-
+            <div class="selectedPost col-md-8 col-lg-7 col-sm-12 m-4" v-if="selectedItem">
+                <div class=" d-inline m-1 text-secondary">#{{selectedItem.type}}</div>
+                <h1 class="display-4 mb-0 pb-0" style="color: rgba(6, 6, 131, 0.637);">{{selectedItem.name}}</h1>
+                <small class="ml-2" style="color: rgba(9, 10, 83, 0.575);">{{selectedItem.Model}}</small>
+                <div id="description" style="font-size: 3vh; color:rgba(0, 0, 0, 0.527)" class="my-2 ml-2 pl-2">{{selectedItem.description}}</div>
+                <div id="location" style="font-size: 3vh; color:rgba(0, 0, 0, 0.527)" class="my-2 ml-2 pl-2">{{selectedItem.location}}</div>
+                <div id="adminMsg" style="font-size: 3vh; color:rgba(0, 0, 0, 0.527); height: 120px;" class="ml-2 p-2">{{selectedItem.adminMsg}}</div>
+                <!-- progress -->
+                <div class="statusBar mx-2 mb-4">
+                    <div class="status row">
+                        <div class="pickup col text-center"style="font-size: 13px; color:rgba(0, 0, 0, 0.527);">Picked Up</div>
+                        <div class="processing col text-center" style="font-size: 13px; color:rgba(0, 0, 0, 0.527);">Processing</div>
+                        <div class="deliver col text-center" style="font-size: 13px; color:rgba(0, 0, 0, 0.527);">Delivered</div>
+                     </div> 
+                    <div class="progress">
+                        
+                        <div class="progress-bar" id="progress-bar" :style="{width: progressPercentage +'%'}" role="progressbar" aria-valuenow="" aria-valuemin="0" aria-valuemax="100"></div>
                     </div>
                 </div>
+                <!-- /progress -->
             </div>
+            <div v-else class="mt-5 pt-5" style="width: 100%;">
+                
+                <div class="w-100 text-center mt-1 pt-2">
+                    <h1 class="m-5 text-success">Hey {{user.name}} Congratulations ! </h1>
+                    <a class="btn-primary mx-auto rounded border-0 p-3 " href="/addNewPost">Add new Post</a>
+                </div>
+            </div>
+            
             <!-- /show selected post details -->
             <!-- user history -->
         
-            <div class="history col-lg-4 col-md-4 col-sm-12 pt-2">
+            <div class="history col-lg-4 col-md-12 col-sm-12 pt-2 mt-4 pl-5">
                 
-                <ul>
-                    <div class="border-bottom ml-0" v-if="posts" v-for="post in posts" @click="selectedItem=post">
-                        <div class="border-1 p-1">
-                          <h5 class="m-0 p-0" style="font-size: 17px; font-weight: bold; color: rgba(12, 56, 122, 0.658);">{{post.name}}</h5>
+                <div class="row">
+                    <div class="border-bottom mr-1 card p-2" style="width: 45%;" v-if="posts" v-for="post in posts" @click="selectedItem=post">
+                        
+                          <h5 class="p-0" style="font-size: 17px; font-weight: bold; color: rgba(12, 56, 122, 0.658);">{{post.name}}</h5>
                           <p class="" style="font-size: 13px; color: rgba(0, 0, 0, 0.384);">{{post.description}}</p>
                           <p v-if="post.pickedUp" class="text-success m-0 p-0" style="font-size: 12px;">Picked Up</p>
                           <p v-if="post.delivered" class="text-success" style="font-size: 12px;">Deliverd</p>
-                        </div>
+                        
                     </div>
+                </div>
 
-
-                    <!-- <li v-if="posts" v-for="post in posts" @click="selectedItem=post" >
-                        <h1>{{post.name}}</h1>
-                        <h4>{{post.model}}</h4>
-                        <h5 v-show="post.pickedUp">Picked Up</h5>
-                        <h5 v-show="post.delivered">Delivered</h5>
-                    </li> -->
-                </ul>
+                    
 
             </div>
             <!-- /history -->
@@ -131,7 +152,6 @@
                         name:"Not Registerd"
                     },
                     posts:[]
-
                 },
                 methods:{
                     signout(){
@@ -144,10 +164,31 @@
                     .then((res)=>{
                         this.user.id= res.data._id;
                         this.user.name= res.data.name;
-                        this.posts=res.data.posts
+                        this.posts=res.data.posts;
+                        this.selectedItem=this.posts[0];
+
+                        
+
                     }).catch((err)=>{
                         window.location.href="/signup"
                     })
+                        
+                    
+                },
+                computed:{
+                    progressPercentage(){
+                        if(this.selectedItem.delivered){
+                            return 100;
+                        }else if(this.selectedItem.pickedUp&&!this.selectedItem.delivered){
+                            return 50;
+                        }else{
+                            return 3;
+                        }
+                        
+                    }
+                    
+                        
+                    
                 }
             })
         </script>

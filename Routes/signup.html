@@ -12,6 +12,13 @@
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script>
 </head>
 <body>
+
+    <style>
+    h2{
+            color: rgba(5, 31, 78, 0.493);
+        }
+    
+    </style>
     <div id="app" class="text-center p-4">
         <h2>Sign Up</h2>
         <input type="text" placeholder="Name" v-model="name" class="border-left-0 border-bottom-1 border-top-0 border-right-0 m-2" v-bind:class="{'text-danger':error}"><br>
@@ -20,7 +27,7 @@
         <input class="border-left-0 border-bottom-1 border-top-0 border-right-0 m-2" type="texts" placeholder="email" v-model="email" v-bind:class="{'text-danger':error}"><br>
         <button @click="signup" class="btn-success rounded p-2 border-0 mt-2">Sign Up</button>
         <button  class="btn-light rounded p-2 border-0 mt-2"><a href="/signin"> Sign In</a></button>
-        <p v-show="error" class="text-danger mt-2" style="font-size: 10px;">Error!<br>Try with another number</p>
+        <p v-show="error" class="text-danger mt-2" style="font-size: 10px;">Error!<br>Try again with correct details</p>
     </div>
     <script>
         var app= new Vue({
@@ -59,7 +66,7 @@
                     this.error=true;
                     setTimeout(()=>{
                                 this.error=false
-                            },2000)
+                            },3000)
                     }
                 }
             }
