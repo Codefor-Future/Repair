@@ -1,6 +1,6 @@
 const mongoose= require("mongoose");
 
-const URL_= process.env.MONGO_URL
+const URL= process.env.MONGO_URL
 
 const InitialiseMongo= async()=>{
     try{
