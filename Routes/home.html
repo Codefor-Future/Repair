@@ -114,7 +114,7 @@
             <div v-else class="mt-5 pt-5" style="width: 100%;">
                 
                 <div class="w-100 text-center mt-1 pt-2">
-                    <h1 class="m-5 text-success">Hey {{user.name}} <span v-if="user.name==='Not Registerd'">Congratulations ! <span></h1>
+                    <h1 class="m-5 text-success">Hey {{user.name}} <span v-if="!user.name==='Not Registerd'">Congratulations ! <span></h1>
                     <a class="btn-primary mx-auto rounded border-0 p-3 " href="/addNewPost">Add new Post</a>
                 </div>
             </div>
