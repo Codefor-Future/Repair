@@ -6,6 +6,10 @@ const router= express.Router();
 
 const User= require("../Models/User");
 
+
+router.get("/",(req,res)=>{
+    res.sendFile(__dirname+"/signup.html")
+})
 router.get("/signup",(req,res)=>{
     res.sendFile(__dirname+"/signup.html")
 })
@@ -113,7 +117,7 @@ router.get("/data", (req,res)=>{
         
         const decoded= jwt.verify(token,"Abhi1190")
         User.findById(decoded.user.id).then((response)=>{
-            console.log(response);
+            
             res.status(200).json(response)
         })
         
