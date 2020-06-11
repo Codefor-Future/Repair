@@ -184,7 +184,7 @@
                     axios.get("/admin/data",{withCredentials:true})
                     .then((res)=>{
                         this.posts=res.data
-                        console.log(res.data)
+                       
                     }).catch((err)=>{
                         window.location.href="/admin/login"
                     })
